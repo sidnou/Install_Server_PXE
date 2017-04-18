@@ -13,14 +13,38 @@
 # Définition: Script d'installation d'un serveur DHCP et PXE 
 #
 ###########################################################################
-# VERSION: 1.0 14/04/17 
+# VERSION:  1.0.1 18/04/17 Améloiration visuel du script
+#           1.0 14/04/17 Création du script
+#           
 #
 ##########################################################################
 ##########################################################################
+#
+##########################################################################
+##########################################################################
+#==================== Informations =======================================
+echo -en "\033[1;33m"
+echo "==================================================================="
+echo "==================================================================="
+echo " Ce script installe tous les composants nécéssaires "
+echo " Composants : "
+echo " isc-dhcp-server tftpd-hpa proftpd pxelinux syslinux "
+echo " Paramètre :"
+echo "  DHCP : dhcp ==> eth1 "
+echo "      Plage adresse IP 192.168.2.100  192.168.2.200"
+echo " Adresse IP :"
+echo "  eth0 :  192.168.1.23"
+echo "          255.255.255.0"
+echo "          192.168.1.1"
+echo "  eth1 :  192.168.2.1"
+echo "==================================================================="
+echo "==================================================================="
+echo -en "\033[0m\n"
 #==================== Variables globale ==================================
 nombreCarteEthernet=0
 # Fichier image ISO à telecharger
-clonezillaVersion="2.4.6-25" # Vession Stable Clonezilla
+clonezillaVersion="2.5.0-25" # Vession Stable Clonezilla
+ubcdVersion="537"
 
 #=========================== DEBUT DU SCRIPT =============================
 
@@ -88,15 +112,16 @@ mkdir /tftpboot
 mkdir /tftpboot/ISO
 mkdir /tftpboot/pxelinux.cfg
 # Redirection Globale erreur et resultat vers Install_ServerPXE.log
-exec  1> /var/log/logInstall/Install_ServerPXE.log 2> /var/log/logInstall/Erreur_Install_ServerPXE.log
+iexec 2>/var/log/logInstall/Erreur_Install_ServerPXE.log
+
 #=========================== Variables ===================================
 # Cartes reseau eth0 eth1 
 # Carte eth0
-ipEth0=192.168.1.23                # IP carte reseau eth0
+ipEth0=192.168.1.23                 # IP carte reseau eth0
 netmskEth0=255.255.255.0            # Masque sous-reseau eth0
-gtwayEth0=192.168.1.1              # Passerelle par defaut eth0
+gtwayEth0=192.168.1.1               # Passerelle par defaut eth0
 # Carte eth1
-ipEth1=192.168.2.100                # IP carte reseau eth1
+ipEth1=192.168.2.1                  # IP carte reseau eth1
 netmskEth1=255.255.255.0            # Masque sous-reseau eth1
 
 # DHCP
@@ -104,15 +129,13 @@ adressReseauIp=192.168.2.0          # Adresse reseaux
 plageIpDebut=192.168.2.100          # Plage de debut adressage IP 
 plageIpFin=192.168.2.200            # Plage de fin adressage IP
 masqSsreseau=255.255.255.0          # Masque sous-reseaux de plage adressage IP 
-adresseSrvDns1="192.168.1.100"      # Adresse IP serveur DNS 1
-adresseSrvDns2="192.168.2.100"      # Adresse IP serveur DNS 2 
+adresseSrvDns1="192.168.1.1"      # Adresse IP serveur DNS 1
+adresseSrvDns2="192.168.2.1"      # Adresse IP serveur DNS 2 
 domaine="teste.fr"                  # Domaine 
 tempBailDefault=86400               # Bail par defaut (en seconde)
 tempBailMax=691200                  # Bail Max (en seconde)
 
 jour=" ====== $(date +%a%d/%m/%y%t==============%t%T%t===========)"
-
- 
 
 #=========================== FONCTIONS ====================================
 function DownloadIso {
@@ -122,16 +145,21 @@ function DownloadIso {
     chmod +x DownloadIso.sh
     cat <<FICHIERDOWNLOADISO>DownloadIso.sh
     #!/bin/bash
-    wget http://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/$clonezillaVersion/clonezilla-live-$clonezillaVersion-amd64.iso && mv clonezilla-live-$clonezillaVersion-amd64.iso /tftpboot/ISO/clonezilla-live-amd64.iso
+    wget http://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/$clonezillaVersion/clonezilla-live-$clonezillaVersion-amd64.iso >&1 && mv clonezilla-live-$clonezillaVersion-amd64.iso /tftpboot/ISO/clonezilla-live-amd64.iso
+    # wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
+    echo " Téléchargement términé "
 FICHIERDOWNLOADISO
+    echo " Téléchargement ISO en-cours ...."
 }
 
 #=========================== Mise à jour du système ======================
-echo "---------------------------------------------------------"
-echo ":         DEBUT Mise à jour du système                  :" 
-echo "---------------------------------------------------------"
+echo -en "\033[1;32m"
+echo "+---------------------------------------------------------+"
+echo ":          DEBUT Mise à jour du système                   :" 
+echo "+---------------------------------------------------------+"
+echo -en "\033[0m"
 echo $jour
-apt-get update && apt-get dist-upgrade -y && echo "Mise a jour OK!" || ping -c 4 8.8.4.4 || echo -e '\33[31m Problème de connexion a internet \33[0m' 
+apt-get update && apt-get dist-upgrade -y && echo "Mise a jour OK!" || ping -c 4 8.8.4.4 || echo -en '\33[31m Problème de connexion a internet \33[0m' 
 #=========================== Configuration des Cartes reseaux ============
 # Sauvegarde configuration des cartes reseaux
 cp /etc/network/interfaces /etc/network/interfaces.original 
@@ -162,11 +190,13 @@ auto eth1
 FICHIERNET
 
 echo "Configuration des cartes reseau    OK !"
-echo "---------------------------------------------------------"
-echo ":         DEBUT l'installation des services             :" 
-echo "---------------------------------------------------------"
+echo -en "\033[1;32m"
+echo "+---------------------------------------------------------+"
+echo ":         DEBUT l'installation des services              :" 
+echo "+---------------------------------------------------------+"
+echo -en "\033[0m"
 #=========================== Installation des Services =======================
-apt-get install -y isc-dhcp-server tftpd-hpa proftpd pxelinux syslinux
+apt-get install -y isc-dhcp-server tftpd-hpa pxelinux syslinux
 #=========================== Configuration du Service DHCP ===================
 # Sauvegarde du fichier de configuration original
 cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.original
@@ -236,25 +266,30 @@ LINUX memdisk
 INITRD /ISO/clonezilla-live-amd64.iso
 APPEND iso
 LABEL 3
+MENU LABEL Ultimate Boot CD
+LINUX memdisk
+INITRD /ISO/ubcd$ubcdVersion.iso 
+APPEND iso
+LABEL 10
 MENU LABEL Redemarrer 
 COM32 reboot.c32
 MENUPXE
 
 # Redemarrage des services
 echo "+----------------------------------------------------------------+"  
-echo ":     Appliquer les modification sur les cartes reseaux         :"
+echo ":     Appliquer les modification sur les cartes reseaux          :"
 echo "+----------------------------------------------------------------+"
-/etc/init.d/networking restart && echo " Les cartes reseaux OK " 
-echo "----------------------------------------------------------------"  
-echo ":                Démmarrage du service DHCP                    :"
-echo "----------------------------------------------------------------"
-/etc/init.d/isc-dhcp-server restart && echo " Le service DHCP OK"
-echo "----------------------------------------------------------------"  
-echo ":                Démmarrage du service TFTP                    :"
-echo "----------------------------------------------------------------"
-/etc/init.d/tftpd-hpa restart && echo " Le service TFTP OK"
+/etc/init.d/networking restart 
+echo "+----------------------------------------------------------------+"  
+echo ":                Démmarrage du service DHCP                      :"
+echo "+----------------------------------------------------------------+"
+/etc/init.d/isc-dhcp-server restart
+echo "+----------------------------------------------------------------+"  
+echo ":                Démmarrage du service TFTP                      :"
+echo "+----------------------------------------------------------------+"
+/etc/init.d/tftpd-hpa restart
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
 cd /tmp 
-./DownloadIso.sh
+./DownloadIso.sh >&1
 exit 0
