@@ -113,7 +113,7 @@ mkdir /tftpboot
 mkdir /tftpboot/ISO
 mkdir /tftpboot/pxelinux.cfg
 # Redirection Globale erreur et resultat vers Install_ServerPXE.log
-iexec 2>/var/log/logInstall/Erreur_Install_ServerPXE.log
+exec 2>/var/log/logInstall/Erreur_Install_ServerPXE.log
 
 #=========================== Variables ===================================
 # Cartes reseau eth0 eth1 
