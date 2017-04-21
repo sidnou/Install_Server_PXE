@@ -2,9 +2,8 @@
 Script pour installer un SERVEUR PXE sur Debian ou Ubuntu
 
 Installation des services 
-isc-dhcp-server tftpd-hpa proftpd pxelinux syslinux  
+isc-dhcp-server tftpd-hpa pxelinux syslinux  
 
-Pour le moment service TFP n'est pas paramétré 
 
 Les adresse IP
 eth0 :                  192.168.1.23
