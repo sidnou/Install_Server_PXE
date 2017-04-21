@@ -29,7 +29,7 @@ echo "==================================================================="
 echo "==================================================================="
 echo " Ce script installe tous les composants nécéssaires "
 echo " Composants : "
-echo " isc-dhcp-server tftpd-hpa proftpd pxelinux syslinux "
+echo " isc-dhcp-server tftpd-hpa pxelinux syslinux "
 echo " Paramètre :"
 echo "  DHCP : dhcp ==> eth1 "
 echo "      Plage adresse IP 192.168.2.100  192.168.2.200"
@@ -247,7 +247,6 @@ TFTP_DIRECTORY="/tftpboot"
 TFTP_ADDRESS="0.0.0.0:69"
 TFTP_OPTIONS="--secure"
 FICHIERTFTP
-#====================== Configuration du service FTP ====================
 
 #=============================== MENU PXE ===============================
 cat > /tftpboot/pxelinux.cfg/default << MENUPXE
