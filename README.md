@@ -1,6 +1,9 @@
 # Install_Server_PXE
 Script pour installer un SERVEUR PXE sur Debian ou Ubuntu
 
+Les Postes clients minimum 2Go RAM 
+Certain ISO font environ 1Go  
+
 Installation des services 
 isc-dhcp-server tftpd-hpa pxelinux syslinux  
 
