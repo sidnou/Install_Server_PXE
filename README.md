@@ -8,8 +8,6 @@ ISO:
 Clonezilla
 Ultimate Boot CD
 
-
-
 Installation des services 
 isc-dhcp-server tftpd-hpa pxelinux syslinux  
 
