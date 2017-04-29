@@ -147,7 +147,11 @@ function DownloadIso {
     cat <<FICHIERDOWNLOADISO>DownloadIso.sh
     #!/bin/bash
     wget http://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/$clonezillaVersion/clonezilla-live-$clonezillaVersion-amd64.iso >&1 && mv clonezilla-live-$clonezillaVersion-amd64.iso /tftpboot/ISO/clonezilla-live-amd64.iso
+    echo -e "ISO CLONEZILLA [\033[1;32m OK \033[0m]"
     wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
+    echo -e "ISO ULTIMATE BOOT CD [\033[1;32m OK \033[0m]"
+    wget http://rescuedisk.kaspersky-labs.com/rescuedisk/updatable/kav_rescue_10.iso mv /tftpboot/ISO/
+    echo -e "ISO KASPERSKY RESCUE [\033[1;32m OK \033[0m]"
 FICHIERDOWNLOADISO
     echo " Téléchargement ISO en-cours ...."
 }
@@ -159,7 +163,7 @@ echo ":          DEBUT Mise à jour du système                   :"
 echo "+---------------------------------------------------------+"
 echo -en "\033[0m"
 echo $jour
-apt-get update && apt-get dist-upgrade -y && echo "Mise a jour OK!" || ping -c 4 8.8.4.4 || echo -en '\33[31m Problème de connexion a internet \33[0m' 
+apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [\033[1;32m OK \033[0m]" || ping -c 4 8.8.4.4 || echo -en '\33[31m Problème de connexion a internet \33[0m' 
 #=========================== Configuration des Cartes reseaux ============
 # Sauvegarde configuration des cartes reseaux
 cp /etc/network/interfaces /etc/network/interfaces.original 
@@ -259,16 +263,25 @@ LABEL 1
 MENU LABEL Demarrer sur le premier disque dur
 COM32 chain.c32
 APPEND hd0
+
 LABEL 2
 MENU LABEL CLONEZILLA 64 BITS
 LINUX memdisk
 INITRD /ISO/clonezilla-live-amd64.iso
 APPEND iso
+
 LABEL 3
 MENU LABEL Ultimate Boot CD
 LINUX memdisk
 INITRD /ISO/ubcd$ubcdVersion.iso 
 APPEND iso
+
+LABEL 4
+MENU LABEL KASPERSKY RESCURE DISK 10
+LINUX memdisk
+INITRD /ISO/kav_rescue_10.iso raw
+APPEND iso
+
 LABEL 10
 MENU LABEL Redemarrer 
 COM32 reboot.c32
@@ -291,4 +304,6 @@ echo "+----------------------------------------------------------------+"
 DownloadIso
 cd /tmp 
 ./DownloadIso.sh
+echo "Téléchargement finis"
+rm DownloadIso.sh
 exit 0
