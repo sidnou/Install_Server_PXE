@@ -24,7 +24,7 @@
 ##########################################################################
 ##########################################################################
 #==================== Informations =======================================
-echo -en "\033[1;33m"
+echo -e "\033[1;33m"
 echo "==================================================================="
 echo "==================================================================="
 echo " Ce script installe tous les composants nécéssaires "
@@ -38,9 +38,10 @@ echo "  eth0 :  192.168.1.23"
 echo "          255.255.255.0"
 echo "          192.168.1.1"
 echo "  eth1 :  192.168.2.1"
+echo "          255.255.255.0"
 echo "==================================================================="
 echo "==================================================================="
-echo -en "\033[0m\n"
+echo -e "\033[0m"
 #==================== Variables globale ==================================
 nombreCarteEthernet=0
 # Fichier image ISO à telecharger
@@ -51,27 +52,23 @@ ubcdVersion="537"
 
 #====================== Verification que l'utilisateur soit bien root ====
 i=$(id -u)
-if [ $? -ne 0 ]; then exit 1; fi
-if [ "$i" -ne 0 ]
-then
-echo "L'installation doit se faire sous root" >&2
+if [ $? -ne 0 ]; then 
+    exit 1
+fi
+
+if [ $i -ne 0 ] ; then
+echo -e "\033[1;31mL'installation doit se faire sous root\033[0m"
 exit 2
 fi
 
 #====================== verification Nombre carte réseau ===================
 for var in 0 1 2 3 4 
 do
-    
     ifconfig eth$var>>/dev/null
-    if [ $? -eq 0 ]
-    then
-        
+    if [ $? -eq 0 ] ; then
         nombreCarteEthernet=$(expr $nombreCarteEthernet + 1)
-        
-    elif [ $? -eq 1 ]    
-    then
-        if [ $nombreCarteEthernet -lt 2 ]
-        then
+    elif [ $? -eq 1 ]; then
+        if [ $nombreCarteEthernet -lt 2 ]; then
             echo " Vous avez $nombreCarteEthernet carte(s) réseau(x) ">&2
             echo " Vous avez moins 2 carte reseau sur votre machine !!!!">&2
             echo " Vous devez ajouter une autre carte reseau sur machine avant executer le script">&2
@@ -81,40 +78,24 @@ do
     fi
 done 
 #=========================== DOSSIERS ======================================
-# Vérifie la présence du dossier logInstall
-if [ -d "/var/log/LogInstall" ] ; then 
-    # Vérification de la présense du fichier Erreur_InstallServerPXE.log
-    if [ ! -f "/var/log/Log_Install/Install_ServerPXE.log" ]; then
-        touch /var/log/logInstall/Install_ServerPXE.log
-    else
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
-          
-    fi
-    # Vérification de la présense du fichier Erreur_InstallServerPXE.log
-    if [ ! -f "/var/log/Log_Install/Erreur_Install_ServerPXE.log" ]; then
-        touch /var/log/logInstall/Erreur_Install_ServerPXE.log
-    else
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-         
-    fi
+# Vérification de la présense du fichier Erreur_InstallServerPXE.log
+if [  ! -e "/var/log/InstallSRVPXE.log" ]; then
+    touch /var/log/InstallSRVPXE.log
 else
- mkdir /var/log/logInstall
- touch /var/log/logInstall/Install_ServerPXE.log
- touch /var/log/logInstall/Erreur_Install_ServerPXE.log
+    echo "======================================================================">>/var/log/InstallSRVPXE.log
+    echo "======================================================================">>/var/log/InstallSRVPXE.log
+    echo "======================================================================">>/var/log/InstallSRVPXE.log
+    echo "======================================================================">>/var/log/InstallSRVPXE.log      
 fi
 # Dossier tftpboot ISO pxelinux.cfg
 mkdir /tftpboot
+echo $?
 mkdir /tftpboot/ISO
+echo $?
 mkdir /tftpboot/pxelinux.cfg
+echo $?
 # Redirection Globale erreur et resultat vers Install_ServerPXE.log
-exec 2>/var/log/logInstall/Erreur_Install_ServerPXE.log
-
+exec 2>>/var/log/InstallSRVPXE.log
 #=========================== Variables ===================================
 # Cartes reseau eth0 eth1 
 # Carte eth0
@@ -146,20 +127,20 @@ function DownloadIso {
     chmod +x DownloadIso.sh
     cat <<FICHIERDOWNLOADISO>DownloadIso.sh
     #!/bin/bash
-    wget http://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/$clonezillaVersion/clonezilla-live-$clonezillaVersion-amd64.iso >&1 && mv clonezilla-live-$clonezillaVersion-amd64.iso /tftpboot/ISO/clonezilla-live-amd64.iso
-    wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
+    ## wget http://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/$clonezillaVersion/clonezilla-live-$clonezillaVersion-amd64.iso >&1 && mv clonezilla-live-$clonezillaVersion-amd64.iso /tftpboot/ISO/clonezilla-live-amd64.iso
+    ## wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
 FICHIERDOWNLOADISO
     echo " Téléchargement ISO en-cours ...."
 }
 
 #=========================== Mise à jour du système ======================
-echo -en "\033[1;32m"
+echo -e "\033[1;32m"
 echo "+---------------------------------------------------------+"
 echo ":          DEBUT Mise à jour du système                   :" 
 echo "+---------------------------------------------------------+"
-echo -en "\033[0m"
+echo -e "\033[0m"
 echo $jour
-apt-get update && apt-get dist-upgrade -y && echo "Mise a jour OK!" || ping -c 4 8.8.4.4 || echo -en '\33[31m Problème de connexion a internet \33[0m' 
+apt-get update >>/dev/null && apt-get dist-upgrade -y >>/dev/nul && echo -e "Mise a jour OK!" || ping -c 4 8.8.4.4 || echo -en '\33[31m Problème de connexion a internet \33[0m' 
 #=========================== Configuration des Cartes reseaux ============
 # Sauvegarde configuration des cartes reseaux
 cp /etc/network/interfaces /etc/network/interfaces.original 
@@ -192,11 +173,44 @@ FICHIERNET
 echo "Configuration des cartes reseau    OK !"
 echo -en "\033[1;32m"
 echo "+---------------------------------------------------------+"
-echo ":         DEBUT l'installation des services              :" 
+echo ":         DEBUT l'installation des services               :"
 echo "+---------------------------------------------------------+"
 echo -en "\033[0m"
+#============================= Installation des Services et des Fichiers ========================================
+# verification du service isc-dhcp-server
+echo -e "\033[1;32m======= INSTALLATTION SERVER DHCP =======\033[0m"
+service isc-dhcp-server status >>/dev/null
+if [ $? -ne 0 ]; then
+    apt-get install isc-dhcp-server >>/dev/null
+else
+    service isc-dhcp-server stop >>/dev/null
+    echo -e "\033[1;33mSERVICE ISC-DHCP-SERVER \033[1;31mARRETE\033[0m"
+fi
+# Verification du service Tftpd-hpa 
+echo -e "\033[1;32m======= INSTALLATTION SERVER TFTP =======\033[0m"
+service tftpd-hpa status >>/dev/null
+if [ $? -ne 0 ]; then
+    apt-get install tftpd-hpa -y >>/dev/null
+else
+    service tftpd-hpa stop >>/dev/null
+    echo -e "\033[1;33mSERVICE TFTPD-HPA \033[1;31mARRETE\033[0m"
+fi
+# Vérification du fichier pxelinux et syslinux
+echo -e "\033[1;32m======= INSTALLATTION SYSLINUX =======\033[0m"
+if [ ! -d "/usr/lib/syslinux" ]; then
+    apt-get install syslinux -y >>/dev/null
+else 
+    echo -e "\033[1;33mDossier SYSLINUX existe déja !!!\033[0m"
+fi
+echo -e "\033[1;32m======= INSTALLATTION PXELINUX =======\033[0m"
+if [ ! -d "/usr/lib/PXELINUX" ]; then
+    apt-get install pxelinux -y >>/dev/null
+else
+    echo -e "\033[1;33mDossier PXELINUX existe déja !!!\033[0m"
+fi
+
 #=========================== Installation des Services =======================
-apt-get install -y isc-dhcp-server tftpd-hpa pxelinux syslinux
+## apt-get install -y isc-dhcp-server tftpd-hpa pxelinux syslinux
 #=========================== Configuration du Service DHCP ===================
 # Sauvegarde du fichier de configuration original
 cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.original
@@ -275,18 +289,18 @@ COM32 reboot.c32
 MENUPXE
 
 # Redemarrage des services
-echo "+----------------------------------------------------------------+"  
+echo "+----------------------------------------------------------------+" 
 echo ":     Appliquer les modification sur les cartes reseaux          :"
 echo "+----------------------------------------------------------------+"
 /etc/init.d/networking restart 
-echo "+----------------------------------------------------------------+"  
+echo "+----------------------------------------------------------------+" 
 echo ":                Démmarrage du service DHCP                      :"
 echo "+----------------------------------------------------------------+"
-/etc/init.d/isc-dhcp-server restart
-echo "+----------------------------------------------------------------+"  
+/etc/init.d/isc-dhcp-server restart 
+echo "+----------------------------------------------------------------+" 
 echo ":                Démmarrage du service TFTP                      :"
 echo "+----------------------------------------------------------------+"
-/etc/init.d/tftpd-hpa restart
+/etc/init.d/tftpd-hpa restart 
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
 cd /tmp 
