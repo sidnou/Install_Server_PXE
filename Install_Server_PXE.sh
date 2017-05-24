@@ -52,7 +52,9 @@ ubcdVersion="537"
 
 #====================== Verification que l'utilisateur soit bien root ====
 i=$(id -u)
-if [ $? -ne 0 ]; then exit 1; fi
+if [ $? -ne 0 ]
+then exit 1
+fi
 if [ "$i" -ne 0 ]
 then
 echo "L'installation doit se faire sous root" >&2
@@ -64,12 +66,12 @@ for var in 0 1 2 3 4
 do
     
     ifconfig eth$var>>/dev/null
-    if [ $? -eq 0 ]
+    if [ $? -eq 0 ] 
     then
         
         nombreCarteEthernet=$(expr $nombreCarteEthernet + 1)
         
-    elif [ $? -eq 1 ]    
+    elif [ $? -eq 1 ]
     then
         if [ $nombreCarteEthernet -lt 2 ]
         then
@@ -82,39 +84,45 @@ do
     fi
 done 
 #=========================== DOSSIERS ======================================
-# Vérifie la présence du dossier logInstall
-if [ -d "/var/log/LogInstall" ] ; then 
-    # Vérification de la présense du fichier Erreur_InstallServerPXE.log
-    if [ ! -f "/var/log/Log_Install/Install_ServerPXE.log" ]; then
-        touch /var/log/logInstall/Install_ServerPXE.log
+# Dossier logInstall
+if [ -d "/var/log/LogInstall" ]
+then 
+    # Fichier ServerPXE.log
+    if [ ! -f "/var/log/Log_Install/ServerPXE.log" ] 
+    then
+        touch /var/log/logInstall/ServerPXE.log
     else
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
+        echo "======================================================================">>/var/log/logInstall/ServerPXE.log
+        echo "======================================================================">>/var/log/logInstall/ServerPXE.log
+        echo "======================================================================">>/var/log/logInstall/ServerPXE.log
+        echo "======================================================================">>/var/log/logInstall/ServerPXE.log
+        echo "########## $(date +%a%d/%m/%y%t===========%t%T%t===========)##########">>/var/log/logInstall/ServerPXE.log
           
-    fi
-    # Vérification de la présense du fichier Erreur_InstallServerPXE.log
-    if [ ! -f "/var/log/Log_Install/Erreur_Install_ServerPXE.log" ]; then
-        touch /var/log/logInstall/Erreur_Install_ServerPXE.log
-    else
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-         
     fi
 else
  mkdir /var/log/logInstall
- touch /var/log/logInstall/Install_ServerPXE.log
- touch /var/log/logInstall/Erreur_Install_ServerPXE.log
+ touch /var/log/logInstall/ServerPXE.log
 fi
+
 # Dossier tftpboot ISO pxelinux.cfg
-mkdir /tftpboot
-mkdir /tftpboot/ISO
-mkdir /tftpboot/pxelinux.cfg
-# Redirection Globale erreur et resultat vers Install_ServerPXE.log
-exec 2>/var/log/logInstall/Erreur_Install_ServerPXE.log
+if [ ! -d "/tftpboot" ]
+then
+    mkdir /tftpboot
+    mkdir /tftpboot/pxelinux.cfg
+fi
+
+if [ ! -d "/tftpboot/ISO" ]
+then
+    mkdir /tftpboot/ISO
+fi
+
+if [ ! -d "/tftpboot/ISO/pxelinux.cfg" ]
+then
+    mkdir /tftpboot/ISO/pxelinux.cfg
+fi
+
+# Redirection Globale erreur et resultat vers ServerPXE.log
+exec 2>/var/log/logInstall/Erreur_ServerPXE.log
 
 #=========================== Variables ===================================
 # Cartes reseau eth0 eth1 
