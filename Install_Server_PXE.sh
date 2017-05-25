@@ -85,7 +85,7 @@ do
 done 
 #=========================== DOSSIERS ======================================
 # Dossier logInstall
-if [ -d "/var/log/LogInstall" ]
+if [ -d "/var/log/logInstall" ]
 then 
     # Fichier ServerPXE.log
     if [ ! -f "/var/log/Log_Install/ServerPXE.log" ] 
