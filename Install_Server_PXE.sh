@@ -125,6 +125,8 @@ fi
 ## exec 2>/var/log/logInstall/Erreur_ServerPXE.log
 
 #=========================== Variables ===================================
+
+jour=" ====== $(date +%a%d/%m/%y%t==============%t%T%t===========)"
 # Cartes reseau eth0 eth1 
 # Carte eth0
 ipEth0=192.168.1.23                 # IP carte reseau eth0
@@ -145,7 +147,7 @@ domaine="teste.fr"                  # Domaine
 tempBailDefault=86400               # Bail par defaut (en seconde)
 tempBailMax=691200                  # Bail Max (en seconde)
 
-jour=" ====== $(date +%a%d/%m/%y%t==============%t%T%t===========)"
+
 
 #=========================== FONCTIONS ====================================
 function DownloadIso {
@@ -175,11 +177,7 @@ echo ":          DEBUT Mise à jour du système                   :"
 echo "+---------------------------------------------------------+"
 echo -e "\033[0m"
 echo $jour
-<<<<<<< HEAD
-apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [\033[1;32m OK \033[0m]" || ping -c 4 8.8.4.4 || echo -en '\033[31m Problème de connexion a internet \033[0m' 
-=======
-apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [\033[1;32m OK \033[0m]" || ping -c 4 8.8.4.4 || echo -en '\33[31m Problème de connexion a internet \33[0m' 
->>>>>>> Teste-autre-iso
+apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [\033[1;32m OK \033[0m]" || ping -c 4 8.8.4.4 || echo -en '\33[31m Problème de connexion a internet \33[0m'
 #=========================== Configuration des Cartes reseaux ============
 # Sauvegarde configuration des cartes reseaux
 cp /etc/network/interfaces /etc/network/interfaces.original 
