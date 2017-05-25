@@ -24,7 +24,7 @@
 ##########################################################################
 ##########################################################################
 #==================== Informations =======================================
-echo -en "\033[1;33m"
+echo -e "\033[1;33m"
 echo "==================================================================="
 echo "==================================================================="
 echo " Ce script installe tous les composants nécéssaires "
@@ -41,7 +41,7 @@ echo "  eth1 :  192.168.2.1"
 echo "          255.255.255.0"
 echo "==================================================================="
 echo "==================================================================="
-echo -en "\033[0m\n"
+echo -e "\033[0m\n"
 #==================== Variables globale ==================================
 nombreCarteEthernet=0
 # Fichier image ISO à telecharger
@@ -122,7 +122,7 @@ then
 fi
 
 # Redirection Globale erreur et resultat vers ServerPXE.log
-exec 2>/var/log/logInstall/Erreur_ServerPXE.log
+## exec 2>/var/log/logInstall/Erreur_ServerPXE.log
 
 #=========================== Variables ===================================
 # Cartes reseau eth0 eth1 
@@ -162,13 +162,13 @@ FICHIERDOWNLOADISO
 }
 
 #=========================== Mise à jour du système ======================
-echo -en "\033[1;32m"
+echo -e "\033[1;32m"
 echo "+---------------------------------------------------------+"
 echo ":          DEBUT Mise à jour du système                   :" 
 echo "+---------------------------------------------------------+"
-echo -en "\033[0m"
+echo -e "\033[0m"
 echo $jour
-apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [\O33[1;32m OK \033[0m]" || ping -c 4 8.8.4.4 || echo -en '\033[31m Problème de connexion a internet \033[0m' 
+apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [ \033[1;32mOK\033[0m ]" || ping -c 4 8.8.4.4 || echo -en '\033[31m Problème de connexion a internet \033[0m' 
 #=========================== Configuration des Cartes reseaux ============
 # Sauvegarde configuration des cartes reseaux
 cp /etc/network/interfaces /etc/network/interfaces.original 
@@ -199,11 +199,11 @@ auto eth1
 FICHIERNET
 
 echo "Configuration des cartes reseau    OK !"
-echo -en "\033[1;32m"
+echo -e "\033[1;32m"
 echo "+---------------------------------------------------------+"
 echo ":         DEBUT l'installation des services              :" 
 echo "+---------------------------------------------------------+"
-echo -en "\033[0m"
+echo -e "\033[0m"
 #=========================== Installation des Services =======================
 apt-get install -y isc-dhcp-server tftpd-hpa pxelinux syslinux
 #=========================== Configuration du Service DHCP ===================
