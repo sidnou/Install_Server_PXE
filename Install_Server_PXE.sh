@@ -168,7 +168,7 @@ echo ":          DEBUT Mise à jour du système                   :"
 echo "+---------------------------------------------------------+"
 echo -e "\033[0m"
 echo $jour
-apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [ \033[1;32mOK\033[0m ]" || ping -c 4 8.8.4.4 || echo -en '\033[31m Problème de connexion a internet \033[0m' 
+apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [\033[1;32m OK \033[0m]" || ping -c 4 8.8.4.4 || echo -en '\033[31m Problème de connexion a internet \033[0m' 
 #=========================== Configuration des Cartes reseaux ============
 # Sauvegarde configuration des cartes reseaux
 cp /etc/network/interfaces /etc/network/interfaces.original 
@@ -198,10 +198,10 @@ auto eth1
     
 FICHIERNET
 
-echo "Configuration des cartes reseau    OK !"
+echo -e "Configuration des cartes reseau   [\033[1;32m OK \033[0m]"
 echo -e "\033[1;32m"
 echo "+---------------------------------------------------------+"
-echo ":         DEBUT l'installation des services              :" 
+echo ":         DEBUT l'installation des services               :" 
 echo "+---------------------------------------------------------+"
 echo -e "\033[0m"
 #=========================== Installation des Services =======================
