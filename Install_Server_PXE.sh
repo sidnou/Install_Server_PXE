@@ -41,11 +41,8 @@ echo "  eth1 :  192.168.2.1"
 echo "          255.255.255.0"
 echo "==================================================================="
 echo "==================================================================="
-<<<<<<< HEAD
-echo -e "\033[0m"
-=======
 echo -e "\033[0m\n"
->>>>>>> master
+
 #==================== Variables globale ==================================
 nombreCarteEthernet=0
 # Fichier image ISO à telecharger
@@ -56,21 +53,12 @@ ubcdVersion="537"
 
 #====================== Verification que l'utilisateur soit bien root ====
 i=$(id -u)
-<<<<<<< HEAD
-if [ $? -ne 0 ]; then 
-    exit 1
-fi
-
-if [ $i -ne 0 ] ; then
-echo -e "\033[1;31mL'installation doit se faire sous root\033[0m"
-=======
 if [ $? -ne 0 ]
 then exit 1
 fi
 if [ "$i" -ne 0 ]
 then
-echo "L'installation doit se faire sous root" >&2
->>>>>>> master
+echo -e "\033[1;31mL'installation doit se faire sous root\033[0m" >&2
 exit 2
 fi
 
@@ -78,12 +66,6 @@ fi
 for var in 0 1 2 3 4 
 do
     ifconfig eth$var>>/dev/null
-<<<<<<< HEAD
-    if [ $? -eq 0 ] ; then
-        nombreCarteEthernet=$(expr $nombreCarteEthernet + 1)
-    elif [ $? -eq 1 ]; then
-        if [ $nombreCarteEthernet -lt 2 ]; then
-=======
     if [ $? -eq 0 ] 
     then
         
@@ -93,7 +75,6 @@ do
     then
         if [ $nombreCarteEthernet -lt 2 ]
         then
->>>>>>> master
             echo " Vous avez $nombreCarteEthernet carte(s) réseau(x) ">&2
             echo " Vous avez moins 2 carte reseau sur votre machine !!!!">&2
             echo " Vous devez ajouter une autre carte reseau sur machine avant executer le script">&2
@@ -103,16 +84,6 @@ do
     fi
 done 
 #=========================== DOSSIERS ======================================
-<<<<<<< HEAD
-# Vérification de la présense du fichier Erreur_InstallServerPXE.log
-if [  ! -e "/var/log/InstallSRVPXE.log" ]; then
-    touch /var/log/InstallSRVPXE.log
-else
-    echo "======================================================================">>/var/log/InstallSRVPXE.log
-    echo "======================================================================">>/var/log/InstallSRVPXE.log
-    echo "======================================================================">>/var/log/InstallSRVPXE.log
-    echo "======================================================================">>/var/log/InstallSRVPXE.log      
-=======
 # Dossier logInstall
 if [ -d "/var/log/LogInstall" ]
 then 
@@ -131,20 +102,9 @@ then
 else
  mkdir /var/log/logInstall
  touch /var/log/logInstall/ServerPXE.log
->>>>>>> master
 fi
 
 # Dossier tftpboot ISO pxelinux.cfg
-<<<<<<< HEAD
-mkdir /tftpboot
-echo $?
-mkdir /tftpboot/ISO
-echo $?
-mkdir /tftpboot/pxelinux.cfg
-echo $?
-# Redirection Globale erreur et resultat vers Install_ServerPXE.log
-exec 2>>/var/log/InstallSRVPXE.log
-=======
 if [ ! -d "/tftpboot" ]
 then
     mkdir /tftpboot
@@ -164,7 +124,6 @@ fi
 # Redirection Globale erreur et resultat vers ServerPXE.log
 ## exec 2>/var/log/logInstall/Erreur_ServerPXE.log
 
->>>>>>> master
 #=========================== Variables ===================================
 
 jour=" ====== $(date +%a%d/%m/%y%t==============%t%T%t===========)"
@@ -182,8 +141,8 @@ adressReseauIp=192.168.2.0          # Adresse reseaux
 plageIpDebut=192.168.2.100          # Plage de debut adressage IP 
 plageIpFin=192.168.2.200            # Plage de fin adressage IP
 masqSsreseau=255.255.255.0          # Masque sous-reseaux de plage adressage IP 
-adresseSrvDns1="192.168.1.1"      # Adresse IP serveur DNS 1
-adresseSrvDns2="192.168.2.1"      # Adresse IP serveur DNS 2 
+adresseSrvDns1="192.168.1.1"        # Adresse IP serveur DNS 1
+adresseSrvDns2="192.168.2.1"        # Adresse IP serveur DNS 2 
 domaine="teste.fr"                  # Domaine 
 tempBailDefault=86400               # Bail par defaut (en seconde)
 tempBailMax=691200                  # Bail Max (en seconde)
@@ -218,11 +177,7 @@ echo ":          DEBUT Mise à jour du système                   :"
 echo "+---------------------------------------------------------+"
 echo -e "\033[0m"
 echo $jour
-<<<<<<< HEAD
-apt-get update >>/dev/null && apt-get dist-upgrade -y >>/dev/nul && echo -e "Mise a jour OK!" || ping -c 4 8.8.4.4 || echo -en '\33[31m Problème de connexion a internet \33[0m' 
-=======
 apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [\033[1;32m OK \033[0m]" || ping -c 4 8.8.4.4 || echo -en '\33[31m Problème de connexion a internet \33[0m'
->>>>>>> master
 #=========================== Configuration des Cartes reseaux ============
 # Sauvegarde configuration des cartes reseaux
 cp /etc/network/interfaces /etc/network/interfaces.original 
@@ -255,10 +210,9 @@ FICHIERNET
 echo -e "Configuration des cartes reseau   [\033[1;32m OK \033[0m]"
 echo -e "\033[1;32m"
 echo "+---------------------------------------------------------+"
-<<<<<<< HEAD
 echo ":         DEBUT l'installation des services               :"
 echo "+---------------------------------------------------------+"
-echo -en "\033[0m"
+echo -e "\033[0m"
 #============================= Installation des Services et des Fichiers ========================================
 # verification du service isc-dhcp-server
 echo -e "\033[1;32m======= INSTALLATTION SERVER DHCP =======\033[0m"
@@ -292,13 +246,6 @@ else
     echo -e "\033[1;33mDossier PXELINUX existe déja !!!\033[0m"
 fi
 
-=======
-echo ":         DEBUT l'installation des services               :" 
-echo "+---------------------------------------------------------+"
-echo -e "\033[0m"
->>>>>>> master
-#=========================== Installation des Services =======================
-## apt-get install -y isc-dhcp-server tftpd-hpa pxelinux syslinux
 #=========================== Configuration du Service DHCP ===================
 # Sauvegarde du fichier de configuration original
 cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.original
