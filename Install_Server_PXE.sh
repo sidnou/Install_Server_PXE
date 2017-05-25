@@ -5,7 +5,7 @@
 #
 #
 #                     Install_Server_PXE.sh
-#                          Version 1.0.1
+#                          Version 1.0.2
 #                    sidney jacques sidjack972@gmail.com
 #
 #
