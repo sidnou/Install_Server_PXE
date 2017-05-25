@@ -348,7 +348,7 @@ echo "+----------------------------------------------------------------+"
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
 cd /tmp 
-./DownloadIso.sh
+## ./DownloadIso.sh
 echo "Téléchargement finis"
-rm DownloadIso.sh
+## rm DownloadIso.sh
 exit 0
