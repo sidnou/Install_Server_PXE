@@ -168,7 +168,7 @@ echo ":          DEBUT Mise à jour du système                   :"
 echo "+---------------------------------------------------------+"
 echo -en "\033[0m"
 echo $jour
-apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [\O33[1;32mOK\033[0m]" || ping -c 4 8.8.4.4 || echo -en '\033[31m Problème de connexion a internet \033[0m' 
+apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [\O33[1;32m OK \033[0m]" || ping -c 4 8.8.4.4 || echo -en '\033[31m Problème de connexion a internet \033[0m' 
 #=========================== Configuration des Cartes reseaux ============
 # Sauvegarde configuration des cartes reseaux
 cp /etc/network/interfaces /etc/network/interfaces.original 
