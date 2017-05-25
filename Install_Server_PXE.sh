@@ -68,9 +68,7 @@ do
     ifconfig eth$var>>/dev/null
     if [ $? -eq 0 ] 
     then
-        
         nombreCarteEthernet=$(expr $nombreCarteEthernet + 1)
-        
     elif [ $? -eq 1 ]
     then
         if [ $nombreCarteEthernet -lt 2 ]
