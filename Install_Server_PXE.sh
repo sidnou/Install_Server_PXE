@@ -119,9 +119,9 @@ then
     mkdir /tftpboot/ISO
 fi
 
-if [ ! -d "/tftpboot/ISO/pxelinux.cfg" ]
+if [ ! -d "/tftpboot/pxelinux.cfg" ]
 then
-    mkdir /tftpboot/ISO/pxelinux.cfg
+    mkdir /tftpboot/pxelinux.cfg
 fi
 
 # Redirection Globale erreur et resultat vers ServerPXE.log
