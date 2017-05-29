@@ -7,6 +7,7 @@ Certain ISO font environ 1Go
 ISO:
 Clonezilla
 Ultimate Boot CD
+Kasperky rescue disk 10 ( client PXE 2Go RAM Recommendé )
 
 Installation des services 
 isc-dhcp-server tftpd-hpa pxelinux syslinux  
