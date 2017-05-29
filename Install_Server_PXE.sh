@@ -150,10 +150,10 @@ function DownloadIso {
     echo -e "ISO CLONEZILLA [\033[1;32m OK \033[0m]"
     wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
     echo -e "ISO ULTIMATE BOOT CD [\033[1;32m OK \033[0m]"
-    wget http://rescuedisk.kaspersky-labs.com/rescuedisk/updatable/kav_rescue_10.iso mv /tftpboot/ISO/
+    wget http://rescuedisk.kaspersky-labs.com/rescuedisk/updatable/kav_rescue_10.iso mv kav_rescue_10.iso /tftpboot/ISO/
     echo -e "ISO KASPERSKY RESCUE [\033[1;32m OK \033[0m]"
     wget http://www.hirensbootcd.es/download/Hirens.BootCD.15.2.zip 
-    echo -e "ISO HIREN\'s Boot CD 15.2 [\033[1;32m OK \033[0m]"
+    echo -e "ISO HIRENs Boot CD 15.2 [\033[1;32m OK \033[0m]"
 
 FICHIERDOWNLOADISO
     echo " Téléchargement ISO en-cours ...."
