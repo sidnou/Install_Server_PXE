@@ -219,11 +219,6 @@ echo -e "\033[1;32m"
 echo "+---------------------------------------------------------+"
 echo ":         DEBUT l'installation des services               :"
 echo "+---------------------------------------------------------+"
-<<<<<<< HEAD
-echo -en "\033[0m"
-#=========================== Installation des Services =======================
-apt-get install -y isc-dhcp-server tftpd-hpa pxelinux syslinux unzip
-=======
 echo -e "\033[0m"
 #============================= Installation des Services et des Fichiers ========================================
 # verification du service isc-dhcp-server
@@ -258,7 +253,6 @@ else
     echo -e "\033[1;33mDossier PXELINUX existe déja !!!\033[0m"
 fi
 
->>>>>>> Teste-Presense-service
 #=========================== Configuration du Service DHCP ===================
 # Sauvegarde du fichier de configuration original
 cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.original
@@ -366,17 +360,10 @@ echo "+----------------------------------------------------------------+"
 /etc/init.d/tftpd-hpa restart 
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
-<<<<<<< HEAD
 cd /tmp/tmpDownLoad/
 ./DownloadIso.sh
 echo "Téléchargement finis"
 rm DownloadIso.sh
 # Effacement du dossier temporaire de téléchargement ISO
 rm -R /tmp/tmpDownLoad
-=======
-cd /tmp 
-## ./DownloadIso.sh
-echo "Téléchargement finis"
-## rm DownloadIso.sh
->>>>>>> Teste-Presense-service
 exit 0
