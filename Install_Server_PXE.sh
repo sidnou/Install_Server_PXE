@@ -316,4 +316,6 @@ cd /tmp/tmpDownLoad/
 ./DownloadIso.sh
 echo "Téléchargement finis"
 rm DownloadIso.sh
+# Effacement du dossier temporaire de téléchargement ISO
+rm -R /tmp/tmpDownLoad
 exit 0
