@@ -24,7 +24,7 @@
 ##########################################################################
 ##########################################################################
 #==================== Informations =======================================
-echo -en "\033[1;33m"
+echo -e "\033[1;33m"
 echo "==================================================================="
 echo "==================================================================="
 echo " Ce script installe tous les composants nécéssaires "
@@ -38,9 +38,11 @@ echo "  eth0 :  192.168.1.23"
 echo "          255.255.255.0"
 echo "          192.168.1.1"
 echo "  eth1 :  192.168.2.1"
+echo "          255.255.255.0"
 echo "==================================================================="
 echo "==================================================================="
-echo -en "\033[0m\n"
+echo -e "\033[0m\n"
+
 #==================== Variables globale ==================================
 nombreCarteEthernet=0
 # Fichier image ISO à telecharger
@@ -51,24 +53,23 @@ ubcdVersion="537"
 
 #====================== Verification que l'utilisateur soit bien root ====
 i=$(id -u)
-if [ $? -ne 0 ]; then exit 1; fi
+if [ $? -ne 0 ]
+then exit 1
+fi
 if [ "$i" -ne 0 ]
 then
-echo "L'installation doit se faire sous root" >&2
+echo -e "\033[1;31mL'installation doit se faire sous root\033[0m" >&2
 exit 2
 fi
 
 #====================== verification Nombre carte réseau ===================
 for var in 0 1 2 3 4 
 do
-    
     ifconfig eth$var>>/dev/null
-    if [ $? -eq 0 ]
+    if [ $? -eq 0 ] 
     then
-        
         nombreCarteEthernet=$(expr $nombreCarteEthernet + 1)
-        
-    elif [ $? -eq 1 ]    
+    elif [ $? -eq 1 ]
     then
         if [ $nombreCarteEthernet -lt 2 ]
         then
@@ -81,42 +82,58 @@ do
     fi
 done 
 #=========================== DOSSIERS ======================================
+<<<<<<< HEAD
 mkdir /tmp/tmpDownLoad
 # Vérifie la présence du dossier logInstall
 if [ -d "/var/log/LogInstall" ] ; then 
     # Vérification de la présense du fichier Erreur_InstallServerPXE.log
     if [ ! -f "/var/log/Log_Install/Install_ServerPXE.log" ]; then
         touch /var/log/logInstall/Install_ServerPXE.log
+=======
+# Dossier logInstall
+if [ -d "/var/log/logInstall" ]
+then 
+    # Fichier ServerPXE.log
+    if [ ! -f "/var/log/Log_Install/ServerPXE.log" ] 
+    then
+        touch /var/log/logInstall/ServerPXE.log
+>>>>>>> Teste-Presense-service
     else
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Install_ServerPXE.log
+        echo "======================================================================">>/var/log/logInstall/ServerPXE.log
+        echo "======================================================================">>/var/log/logInstall/ServerPXE.log
+        echo "======================================================================">>/var/log/logInstall/ServerPXE.log
+        echo "======================================================================">>/var/log/logInstall/ServerPXE.log
+        echo "########## $(date +%a%d/%m/%y%t===========%t%T%t===========)##########">>/var/log/logInstall/ServerPXE.log
           
-    fi
-    # Vérification de la présense du fichier Erreur_InstallServerPXE.log
-    if [ ! -f "/var/log/Log_Install/Erreur_Install_ServerPXE.log" ]; then
-        touch /var/log/logInstall/Erreur_Install_ServerPXE.log
-    else
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-        echo "======================================================================">>/var/log/logInstall/Erreur_Install_ServerPXE.log
-         
     fi
 else
  mkdir /var/log/logInstall
- touch /var/log/logInstall/Install_ServerPXE.log
- touch /var/log/logInstall/Erreur_Install_ServerPXE.log
+ touch /var/log/logInstall/ServerPXE.log
 fi
+
 # Dossier tftpboot ISO pxelinux.cfg
-mkdir /tftpboot
-mkdir /tftpboot/ISO
-mkdir /tftpboot/pxelinux.cfg
-# Redirection Globale erreur et resultat vers Install_ServerPXE.log
-exec 2>/var/log/logInstall/Erreur_Install_ServerPXE.log
+if [ ! -d "/tftpboot" ]
+then
+    mkdir /tftpboot
+    mkdir /tftpboot/pxelinux.cfg
+fi
+
+if [ ! -d "/tftpboot/ISO" ]
+then
+    mkdir /tftpboot/ISO
+fi
+
+if [ ! -d "/tftpboot/ISO/pxelinux.cfg" ]
+then
+    mkdir /tftpboot/ISO/pxelinux.cfg
+fi
+
+# Redirection Globale erreur et resultat vers ServerPXE.log
+## exec 2>/var/log/logInstall/Erreur_ServerPXE.log
 
 #=========================== Variables ===================================
+
+jour=" ====== $(date +%a%d/%m/%y%t==============%t%T%t===========)"
 # Cartes reseau eth0 eth1 
 # Carte eth0
 ipEth0=192.168.1.23                 # IP carte reseau eth0
@@ -137,7 +154,7 @@ domaine="teste.fr"                  # Domaine
 tempBailDefault=86400               # Bail par defaut (en seconde)
 tempBailMax=691200                  # Bail Max (en seconde)
 
-jour=" ====== $(date +%a%d/%m/%y%t==============%t%T%t===========)"
+
 
 #=========================== FONCTIONS ====================================
 function DownloadIso {
@@ -161,13 +178,13 @@ FICHIERDOWNLOADISO
 }
 
 #=========================== Mise à jour du système ======================
-echo -en "\033[1;32m"
+echo -e "\033[1;32m"
 echo "+---------------------------------------------------------+"
 echo ":          DEBUT Mise à jour du système                   :" 
 echo "+---------------------------------------------------------+"
-echo -en "\033[0m"
+echo -e "\033[0m"
 echo $jour
-apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [\033[1;32m OK \033[0m]" || ping -c 4 8.8.4.4 || echo -en '\33[31m Problème de connexion a internet \33[0m' 
+apt-get update && apt-get dist-upgrade -y && echo -e "Mise a jour [\033[1;32m OK \033[0m]" || ping -c 4 8.8.4.4 || echo -en '\33[31m Problème de connexion a internet \33[0m'
 #=========================== Configuration des Cartes reseaux ============
 # Sauvegarde configuration des cartes reseaux
 cp /etc/network/interfaces /etc/network/interfaces.original 
@@ -197,14 +214,51 @@ auto eth1
     
 FICHIERNET
 
-echo "Configuration des cartes reseau    OK !"
-echo -en "\033[1;32m"
+echo -e "Configuration des cartes reseau   [\033[1;32m OK \033[0m]"
+echo -e "\033[1;32m"
 echo "+---------------------------------------------------------+"
-echo ":         DEBUT l'installation des services              :" 
+echo ":         DEBUT l'installation des services               :"
 echo "+---------------------------------------------------------+"
+<<<<<<< HEAD
 echo -en "\033[0m"
 #=========================== Installation des Services =======================
 apt-get install -y isc-dhcp-server tftpd-hpa pxelinux syslinux unzip
+=======
+echo -e "\033[0m"
+#============================= Installation des Services et des Fichiers ========================================
+# verification du service isc-dhcp-server
+echo -e "\033[1;32m======= INSTALLATTION SERVER DHCP =======\033[0m"
+service isc-dhcp-server status >>/dev/null
+if [ $? -ne 0 ]; then
+    apt-get install isc-dhcp-server >>/dev/null
+else
+    service isc-dhcp-server stop >>/dev/null
+    echo -e "\033[1;33mSERVICE ISC-DHCP-SERVER \033[1;31mARRETE\033[0m"
+fi
+# Verification du service Tftpd-hpa 
+echo -e "\033[1;32m======= INSTALLATTION SERVER TFTP =======\033[0m"
+service tftpd-hpa status >>/dev/null
+if [ $? -ne 0 ]; then
+    apt-get install tftpd-hpa -y >>/dev/null
+else
+    service tftpd-hpa stop >>/dev/null
+    echo -e "\033[1;33mSERVICE TFTPD-HPA \033[1;31mARRETE\033[0m"
+fi
+# Vérification du fichier pxelinux et syslinux
+echo -e "\033[1;32m======= INSTALLATTION SYSLINUX =======\033[0m"
+if [ ! -d "/usr/lib/syslinux" ]; then
+    apt-get install syslinux -y >>/dev/null
+else 
+    echo -e "\033[1;33mDossier SYSLINUX existe déja !!!\033[0m"
+fi
+echo -e "\033[1;32m======= INSTALLATTION PXELINUX =======\033[0m"
+if [ ! -d "/usr/lib/PXELINUX" ]; then
+    apt-get install pxelinux -y >>/dev/null
+else
+    echo -e "\033[1;33mDossier PXELINUX existe déja !!!\033[0m"
+fi
+
+>>>>>>> Teste-Presense-service
 #=========================== Configuration du Service DHCP ===================
 # Sauvegarde du fichier de configuration original
 cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.original
@@ -298,24 +352,31 @@ COM32 reboot.c32
 MENUPXE
 
 # Redemarrage des services
-echo "+----------------------------------------------------------------+"  
+echo "+----------------------------------------------------------------+" 
 echo ":     Appliquer les modification sur les cartes reseaux          :"
 echo "+----------------------------------------------------------------+"
 /etc/init.d/networking restart 
-echo "+----------------------------------------------------------------+"  
+echo "+----------------------------------------------------------------+" 
 echo ":                Démmarrage du service DHCP                      :"
 echo "+----------------------------------------------------------------+"
-/etc/init.d/isc-dhcp-server restart
-echo "+----------------------------------------------------------------+"  
+/etc/init.d/isc-dhcp-server restart 
+echo "+----------------------------------------------------------------+" 
 echo ":                Démmarrage du service TFTP                      :"
 echo "+----------------------------------------------------------------+"
-/etc/init.d/tftpd-hpa restart
+/etc/init.d/tftpd-hpa restart 
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
+<<<<<<< HEAD
 cd /tmp/tmpDownLoad/
 ./DownloadIso.sh
 echo "Téléchargement finis"
 rm DownloadIso.sh
 # Effacement du dossier temporaire de téléchargement ISO
 rm -R /tmp/tmpDownLoad
+=======
+cd /tmp 
+## ./DownloadIso.sh
+echo "Téléchargement finis"
+## rm DownloadIso.sh
+>>>>>>> Teste-Presense-service
 exit 0

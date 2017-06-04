@@ -1,5 +1,5 @@
 # Install_Server_PXE
-Script pour installer un SERVEUR PXE sur Debian ou Ubuntu
+Script pour installer un SERVEUR PXE sur Debian
 
 Les Postes clients minimum 2Go RAM 
 Certain ISO font environ 1Go  
