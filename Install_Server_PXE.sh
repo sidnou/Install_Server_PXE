@@ -81,6 +81,7 @@ do
     fi
 done 
 #=========================== DOSSIERS ======================================
+mkdir /tmp/tmpDownLoad
 # Vérifie la présence du dossier logInstall
 if [ -d "/var/log/LogInstall" ] ; then 
     # Vérification de la présense du fichier Erreur_InstallServerPXE.log
@@ -141,18 +142,18 @@ jour=" ====== $(date +%a%d/%m/%y%t==============%t%T%t===========)"
 #=========================== FONCTIONS ====================================
 function DownloadIso {
     # Creation fichier Temp 
-    touch /tmp/DownloadIso.sh
-    cd /tmp
+    touch /tmp/tmpDownLoad/DownloadIso.sh
+    cd /tmp/tmpDownLoad
     chmod +x DownloadIso.sh
     cat <<FICHIERDOWNLOADISO>DownloadIso.sh
     #!/bin/bash
     wget http://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/$clonezillaVersion/clonezilla-live-$clonezillaVersion-amd64.iso >&1 && mv clonezilla-live-$clonezillaVersion-amd64.iso /tftpboot/ISO/clonezilla-live-amd64.iso
     echo -e "ISO CLONEZILLA [\033[1;32m OK \033[0m]"
-    wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
+    wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && echo $# && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
     echo -e "ISO ULTIMATE BOOT CD [\033[1;32m OK \033[0m]"
-    wget http://rescuedisk.kaspersky-labs.com/rescuedisk/updatable/kav_rescue_10.iso mv kav_rescue_10.iso /tftpboot/ISO/
+    wget http://rescuedisk.kaspersky-labs.com/rescuedisk/updatable/kav_rescue_10.iso && mv kav_rescue_10.iso /tftpboot/ISO/
     echo -e "ISO KASPERSKY RESCUE [\033[1;32m OK \033[0m]"
-    wget http://www.hirensbootcd.es/download/Hirens.BootCD.15.2.zip 
+    wget http://www.hirensbootcd.es/download/Hirens.BootCD.15.2.zip && unzip Hirens.BootCD.15.2.zip && mv "Hiren's.BootCD.15.2.iso" /tftpboot/ISO/HirenSBootCD.iso
     echo -e "ISO HIRENs Boot CD 15.2 [\033[1;32m OK \033[0m]"
 
 FICHIERDOWNLOADISO
@@ -203,7 +204,7 @@ echo ":         DEBUT l'installation des services              :"
 echo "+---------------------------------------------------------+"
 echo -en "\033[0m"
 #=========================== Installation des Services =======================
-apt-get install -y isc-dhcp-server tftpd-hpa pxelinux syslinux
+apt-get install -y isc-dhcp-server tftpd-hpa pxelinux syslinux unzip
 #=========================== Configuration du Service DHCP ===================
 # Sauvegarde du fichier de configuration original
 cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.original
@@ -282,8 +283,14 @@ APPEND iso
 LABEL 4
 MENU LABEL KASPERSKY RESCURE DISK 10
 LINUX memdisk
-INITRD /ISO/kav_rescue_10.iso raw
-APPEND iso
+INITRD /ISO/kav_rescue_10.iso 
+APPEND iso raw
+
+LABEL 5
+MENU LABEL HIREN S BOOT CD 15.2
+LINUX memdisk
+INITRD /ISO/HirenSBootCD.iso
+APPEND iso raw
 
 LABEL 10
 MENU LABEL Redemarrer 
@@ -305,7 +312,7 @@ echo "+----------------------------------------------------------------+"
 /etc/init.d/tftpd-hpa restart
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
-cd /tmp 
+cd /tmp/tmpDownLoad/
 ./DownloadIso.sh
 echo "Téléchargement finis"
 rm DownloadIso.sh
