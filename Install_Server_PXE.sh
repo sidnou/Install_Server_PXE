@@ -82,14 +82,7 @@ do
     fi
 done 
 #=========================== DOSSIERS ======================================
-<<<<<<< HEAD
 mkdir /tmp/tmpDownLoad
-# Vérifie la présence du dossier logInstall
-if [ -d "/var/log/LogInstall" ] ; then 
-    # Vérification de la présense du fichier Erreur_InstallServerPXE.log
-    if [ ! -f "/var/log/Log_Install/Install_ServerPXE.log" ]; then
-        touch /var/log/logInstall/Install_ServerPXE.log
-=======
 # Dossier logInstall
 if [ -d "/var/log/logInstall" ]
 then 
@@ -97,7 +90,6 @@ then
     if [ ! -f "/var/log/Log_Install/ServerPXE.log" ] 
     then
         touch /var/log/logInstall/ServerPXE.log
->>>>>>> Teste-Presense-service
     else
         echo "======================================================================">>/var/log/logInstall/ServerPXE.log
         echo "======================================================================">>/var/log/logInstall/ServerPXE.log
