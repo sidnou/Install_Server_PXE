@@ -45,6 +45,7 @@ echo "          255.255.255.0"
 echo "==================================================================="
 echo "==================================================================="
 echo -e "\033[0m\n"
+
 #==================== Variables globale ==================================
 nombreCarteEthernet=0
 # Fichier image ISO à telecharger
@@ -60,20 +61,17 @@ then exit 1
 fi
 if [ "$i" -ne 0 ]
 then
-echo "L'installation doit se faire sous root" >&2
+echo -e "\033[1;31mL'installation doit se faire sous root\033[0m" >&2
 exit 2
 fi
 
 #====================== verification Nombre carte réseau ===================
 for var in 0 1 2 3 4 
 do
-    
     ifconfig eth$var>>/dev/null
     if [ $? -eq 0 ] 
     then
-        
         nombreCarteEthernet=$(expr $nombreCarteEthernet + 1)
-        
     elif [ $? -eq 1 ]
     then
         if [ $nombreCarteEthernet -lt 2 ]
@@ -87,8 +85,9 @@ do
     fi
 done 
 #=========================== DOSSIERS ======================================
+mkdir /tmp/tmpDownLoad
 # Dossier logInstall
-if [ -d "/var/log/LogInstall" ]
+if [ -d "/var/log/logInstall" ]
 then 
     # Fichier ServerPXE.log
     if [ ! -f "/var/log/Log_Install/ServerPXE.log" ] 
@@ -144,8 +143,8 @@ adressReseauIp=192.168.2.0          # Adresse reseaux
 plageIpDebut=192.168.2.100          # Plage de debut adressage IP 
 plageIpFin=192.168.2.200            # Plage de fin adressage IP
 masqSsreseau=255.255.255.0          # Masque sous-reseaux de plage adressage IP 
-adresseSrvDns1="192.168.1.1"      # Adresse IP serveur DNS 1
-adresseSrvDns2="192.168.2.1"      # Adresse IP serveur DNS 2 
+adresseSrvDns1="192.168.1.1"        # Adresse IP serveur DNS 1
+adresseSrvDns2="192.168.2.1"        # Adresse IP serveur DNS 2 
 domaine="teste.fr"                  # Domaine 
 tempBailDefault=86400               # Bail par defaut (en seconde)
 tempBailMax=691200                  # Bail Max (en seconde)
@@ -155,19 +154,19 @@ tempBailMax=691200                  # Bail Max (en seconde)
 #=========================== FONCTIONS ====================================
 function DownloadIso {
     # Creation fichier Temp 
-    touch /tmp/DownloadIso.sh
-    cd /tmp
+    touch /tmp/tmpDownLoad/DownloadIso.sh
+    cd /tmp/tmpDownLoad
     chmod +x DownloadIso.sh
     cat <<FICHIERDOWNLOADISO>DownloadIso.sh
     #!/bin/bash
     wget http://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/$clonezillaVersion/clonezilla-live-$clonezillaVersion-amd64.iso >&1 && mv clonezilla-live-$clonezillaVersion-amd64.iso /tftpboot/ISO/clonezilla-live-amd64.iso
     echo -e "ISO CLONEZILLA [\033[1;32m OK \033[0m]"
-    wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
+    wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && echo $# && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
     echo -e "ISO ULTIMATE BOOT CD [\033[1;32m OK \033[0m]"
-    wget http://rescuedisk.kaspersky-labs.com/rescuedisk/updatable/kav_rescue_10.iso mv /tftpboot/ISO/
+    wget http://rescuedisk.kaspersky-labs.com/rescuedisk/updatable/kav_rescue_10.iso && mv kav_rescue_10.iso /tftpboot/ISO/
     echo -e "ISO KASPERSKY RESCUE [\033[1;32m OK \033[0m]"
-    wget http://www.hirensbootcd.es/download/Hirens.BootCD.15.2.zip 
-    echo -e "ISO HIREN\'s Boot CD 15.2 [\033[1;32m OK \033[0m]"
+    wget http://www.hirensbootcd.es/download/Hirens.BootCD.15.2.zip && unzip Hirens.BootCD.15.2.zip && mv "Hiren's.BootCD.15.2.iso" /tftpboot/ISO/HirenSBootCD.iso
+    echo -e "ISO HIRENs Boot CD 15.2 [\033[1;32m OK \033[0m]"
 
 FICHIERDOWNLOADISO
     echo " Téléchargement ISO en-cours ...."
@@ -213,11 +212,42 @@ FICHIERNET
 echo -e "Configuration des cartes reseau   [\033[1;32m OK \033[0m]"
 echo -e "\033[1;32m"
 echo "+---------------------------------------------------------+"
-echo ":         DEBUT l'installation des services               :" 
+echo ":         DEBUT l'installation des services               :"
 echo "+---------------------------------------------------------+"
 echo -e "\033[0m"
-#=========================== Installation des Services =======================
-apt-get install -y isc-dhcp-server tftpd-hpa pxelinux syslinux
+#============================= Installation des Services et des Fichiers ========================================
+# verification du service isc-dhcp-server
+echo -e "\033[1;32m======= INSTALLATTION SERVER DHCP =======\033[0m"
+service isc-dhcp-server status >>/dev/null
+if [ $? -ne 0 ]; then
+    apt-get install isc-dhcp-server >>/dev/null && echo -e "Installattion Serveur DHCP [\033[1;32m OK \033[0m]"
+else
+    service isc-dhcp-server stop >>/dev/null
+    echo -e "\033[1;33mSERVICE ISC-DHCP-SERVER \033[1;31mARRETE\033[0m"
+fi
+# Verification du service Tftpd-hpa 
+echo -e "\033[1;32m======= INSTALLATTION SERVER TFTP =======\033[0m"
+service tftpd-hpa status >>/dev/null
+if [ $? -ne 0 ]; then
+    apt-get install tftpd-hpa -y >>/dev/null && echo -e "Installattion Serveur DHCP [\033[1;32m OK \033[0m]"
+else
+    service tftpd-hpa stop >>/dev/null
+    echo -e "\033[1;33mSERVICE TFTPD-HPA \033[1;31mARRETE\033[0m"
+fi
+# Vérification du fichier pxelinux et syslinux
+echo -e "\033[1;32m======= INSTALLATTION SYSLINUX =======\033[0m"
+if [ ! -d "/usr/lib/syslinux" ]; then
+    apt-get install syslinux -y >>/dev/null && echo -e "Installattion Serveur DHCP [\033[1;32m OK \033[0m]"
+else 
+    echo -e "\033[1;33mDossier SYSLINUX existe déja !!!\033[0m"
+fi
+echo -e "\033[1;32m======= INSTALLATTION PXELINUX =======\033[0m"
+if [ ! -d "/usr/lib/PXELINUX" ]; then
+    apt-get install pxelinux -y >>/dev/null && echo -e "Installattion Serveur DHCP [\033[1;32m OK \033[0m]"
+else
+    echo -e "\033[1;33mDossier PXELINUX existe déja !!!\033[0m"
+fi
+
 #=========================== Configuration du Service DHCP ===================
 # Sauvegarde du fichier de configuration original
 cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.original
@@ -296,8 +326,14 @@ APPEND iso
 LABEL 4
 MENU LABEL KASPERSKY RESCURE DISK 10
 LINUX memdisk
-INITRD /ISO/kav_rescue_10.iso raw
-APPEND iso
+INITRD /ISO/kav_rescue_10.iso 
+APPEND iso raw
+
+LABEL 5
+MENU LABEL HIREN S BOOT CD 15.2
+LINUX memdisk
+INITRD /ISO/HirenSBootCD.iso
+APPEND iso raw
 
 LABEL 10
 MENU LABEL Redemarrer 
@@ -305,22 +341,24 @@ COM32 reboot.c32
 MENUPXE
 
 # Redemarrage des services
-echo "+----------------------------------------------------------------+"  
+echo "+----------------------------------------------------------------+" 
 echo ":     Appliquer les modification sur les cartes reseaux          :"
 echo "+----------------------------------------------------------------+"
 /etc/init.d/networking restart 
-echo "+----------------------------------------------------------------+"  
+echo "+----------------------------------------------------------------+" 
 echo ":                Démmarrage du service DHCP                      :"
 echo "+----------------------------------------------------------------+"
-/etc/init.d/isc-dhcp-server restart
-echo "+----------------------------------------------------------------+"  
+/etc/init.d/isc-dhcp-server restart 
+echo "+----------------------------------------------------------------+" 
 echo ":                Démmarrage du service TFTP                      :"
 echo "+----------------------------------------------------------------+"
-/etc/init.d/tftpd-hpa restart
+/etc/init.d/tftpd-hpa restart 
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
-cd /tmp 
+cd /tmp/tmpDownLoad/
 ./DownloadIso.sh
 echo "Téléchargement finis"
 rm DownloadIso.sh
+# Effacement du dossier temporaire de téléchargement ISO
+rm -R /tmp/tmpDownLoad
 exit 0
