@@ -5,7 +5,7 @@
 #
 #
 #                     Install_Server_PXE.sh
-#                          Version 1.0.1
+#                          Version 1.0.2
 #                    sidney jacques sidjack972@gmail.com
 #
 #
@@ -13,7 +13,10 @@
 # Définition: Script d'installation d'un serveur DHCP et PXE 
 #
 ###########################################################################
-# VERSION:  1.0.1 18/04/17 Améloiration visuel du script
+# VERSION:  1.0.2 25/05/17 Améloiration visuel du script et teste de la 
+#                          présence des dossier et fichier 
+#            
+#           1.0.1 18/04/17 Améloiration visuel du script
 #           1.0 14/04/17 Création du script
 #           
 #
@@ -114,9 +117,9 @@ then
     mkdir /tftpboot/ISO
 fi
 
-if [ ! -d "/tftpboot/ISO/pxelinux.cfg" ]
+if [ ! -d "/tftpboot/pxelinux.cfg" ]
 then
-    mkdir /tftpboot/ISO/pxelinux.cfg
+    mkdir /tftpboot/pxelinux.cfg
 fi
 
 # Redirection Globale erreur et resultat vers ServerPXE.log
