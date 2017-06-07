@@ -216,7 +216,7 @@ echo -e "\033[0m"
 echo -e "\033[1;32m======= INSTALLATTION SERVER DHCP =======\033[0m"
 service isc-dhcp-server status >>/dev/null
 if [ $? -ne 0 ]; then
-    apt-get install isc-dhcp-server >>/dev/null
+    apt-get install isc-dhcp-server >>/dev/null && echo -e "Installattion Serveur DHCP [\033[1;32m OK \033[0m]"
 else
     service isc-dhcp-server stop >>/dev/null
     echo -e "\033[1;33mSERVICE ISC-DHCP-SERVER \033[1;31mARRETE\033[0m"
@@ -225,7 +225,7 @@ fi
 echo -e "\033[1;32m======= INSTALLATTION SERVER TFTP =======\033[0m"
 service tftpd-hpa status >>/dev/null
 if [ $? -ne 0 ]; then
-    apt-get install tftpd-hpa -y >>/dev/null
+    apt-get install tftpd-hpa -y >>/dev/null && echo -e "Installattion Serveur DHCP [\033[1;32m OK \033[0m]"
 else
     service tftpd-hpa stop >>/dev/null
     echo -e "\033[1;33mSERVICE TFTPD-HPA \033[1;31mARRETE\033[0m"
@@ -233,13 +233,13 @@ fi
 # Vérification du fichier pxelinux et syslinux
 echo -e "\033[1;32m======= INSTALLATTION SYSLINUX =======\033[0m"
 if [ ! -d "/usr/lib/syslinux" ]; then
-    apt-get install syslinux -y >>/dev/null
+    apt-get install syslinux -y >>/dev/null && echo -e "Installattion Serveur DHCP [\033[1;32m OK \033[0m]"
 else 
     echo -e "\033[1;33mDossier SYSLINUX existe déja !!!\033[0m"
 fi
 echo -e "\033[1;32m======= INSTALLATTION PXELINUX =======\033[0m"
 if [ ! -d "/usr/lib/PXELINUX" ]; then
-    apt-get install pxelinux -y >>/dev/null
+    apt-get install pxelinux -y >>/dev/null && echo -e "Installattion Serveur DHCP [\033[1;32m OK \033[0m]"
 else
     echo -e "\033[1;33mDossier PXELINUX existe déja !!!\033[0m"
 fi
