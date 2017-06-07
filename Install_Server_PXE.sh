@@ -85,6 +85,7 @@ do
     fi
 done 
 #=========================== DOSSIERS ======================================
+mkdir /tmp/tmpDownLoad
 # Dossier logInstall
 if [ -d "/var/log/logInstall" ]
 then 
@@ -153,19 +154,19 @@ tempBailMax=691200                  # Bail Max (en seconde)
 #=========================== FONCTIONS ====================================
 function DownloadIso {
     # Creation fichier Temp 
-    touch /tmp/DownloadIso.sh
-    cd /tmp
+    touch /tmp/tmpDownLoad/DownloadIso.sh
+    cd /tmp/tmpDownLoad
     chmod +x DownloadIso.sh
     cat <<FICHIERDOWNLOADISO>DownloadIso.sh
     #!/bin/bash
     wget http://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/$clonezillaVersion/clonezilla-live-$clonezillaVersion-amd64.iso >&1 && mv clonezilla-live-$clonezillaVersion-amd64.iso /tftpboot/ISO/clonezilla-live-amd64.iso
     echo -e "ISO CLONEZILLA [\033[1;32m OK \033[0m]"
-    wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
+    wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && echo $# && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
     echo -e "ISO ULTIMATE BOOT CD [\033[1;32m OK \033[0m]"
-    wget http://rescuedisk.kaspersky-labs.com/rescuedisk/updatable/kav_rescue_10.iso mv /tftpboot/ISO/
+    wget http://rescuedisk.kaspersky-labs.com/rescuedisk/updatable/kav_rescue_10.iso && mv kav_rescue_10.iso /tftpboot/ISO/
     echo -e "ISO KASPERSKY RESCUE [\033[1;32m OK \033[0m]"
-    wget http://www.hirensbootcd.es/download/Hirens.BootCD.15.2.zip 
-    echo -e "ISO HIREN\'s Boot CD 15.2 [\033[1;32m OK \033[0m]"
+    wget http://www.hirensbootcd.es/download/Hirens.BootCD.15.2.zip && unzip Hirens.BootCD.15.2.zip && mv "Hiren's.BootCD.15.2.iso" /tftpboot/ISO/HirenSBootCD.iso
+    echo -e "ISO HIRENs Boot CD 15.2 [\033[1;32m OK \033[0m]"
 
 FICHIERDOWNLOADISO
     echo " Téléchargement ISO en-cours ...."
@@ -325,8 +326,14 @@ APPEND iso
 LABEL 4
 MENU LABEL KASPERSKY RESCURE DISK 10
 LINUX memdisk
-INITRD /ISO/kav_rescue_10.iso raw
-APPEND iso
+INITRD /ISO/kav_rescue_10.iso 
+APPEND iso raw
+
+LABEL 5
+MENU LABEL HIREN S BOOT CD 15.2
+LINUX memdisk
+INITRD /ISO/HirenSBootCD.iso
+APPEND iso raw
 
 LABEL 10
 MENU LABEL Redemarrer 
@@ -348,8 +355,10 @@ echo "+----------------------------------------------------------------+"
 /etc/init.d/tftpd-hpa restart 
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
-cd /tmp 
-## ./DownloadIso.sh
+cd /tmp/tmpDownLoad/
+./DownloadIso.sh
 echo "Téléchargement finis"
-## rm DownloadIso.sh
+rm DownloadIso.sh
+# Effacement du dossier temporaire de téléchargement ISO
+rm -R /tmp/tmpDownLoad
 exit 0
