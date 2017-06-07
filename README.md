@@ -5,8 +5,8 @@ Les Postes clients minimum 2Go RAM
 Certain ISO font environ 1Go  
 
 ISO:
-Clonezilla
-Ultimate Boot CD
+Clonezilla,
+Ultimate Boot CD,
 Kasperky rescue disk 10 ( client PXE 2Go RAM Recommendé )
 
 Installation des services 
