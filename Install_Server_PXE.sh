@@ -247,7 +247,14 @@ if [ ! -d "/usr/lib/PXELINUX" ]; then
 else
     echo -e "\033[1;33mDossier PXELINUX existe déja !!!\033[0m"
 fi
-
+# vérication du logiciel unzip 
+echo -e "\033[1;32m======= INSTALLATTION UNZIP =======\033[0m"
+ unzip >>/dev/null
+if [ $? -ne 0 ]; then
+    apt-get install unzip && echo -e "Installattion UNZIP [\033[1;32m OK \033[0m]"
+else
+    echo -e " \033[1;33mUnzip déja Installer\033[0m [\033[1;32m OK \033[0m] "
+fi
 #=========================== Configuration du Service DHCP ===================
 # Sauvegarde du fichier de configuration original
 cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.original
