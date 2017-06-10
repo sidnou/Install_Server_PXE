@@ -22,5 +22,6 @@ Masque sous-réseau :    255.255.255.0
 
 Plage adressage IP du DHCP 
 192.168.2.100 à 192.168.2.200
+Masque sous-réseau 255.255.255.0
 
 
