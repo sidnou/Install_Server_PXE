@@ -270,7 +270,8 @@ cat > /etc/dhcp/dhcpd.conf << FICHIERDHCP
 authoritative;       
 
 ddns-update-style none;
-
+# Option 
+option routers $ipEth1;
 # Addresse serveur DNS et domaine
 option domain-name-servers $adresseSrvDns1, $adresseSrvDns2; 
 option domain-name "$domaine";
@@ -285,14 +286,18 @@ subnet $adressReseauIp netmask $masqSsreseau {
     # Plage adresse IP
     range $plageIpDebut $plageIpFin;
     
+    
 }
 next-server $ipEth1;
 filename "pxelinux.0";
 
 FICHIERDHCP
+# Activé NAT sur SERVER PXE à chaque démarrage du serveur 
+sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+
 # Configuration des Interfaces reseaux d'ecoute
 cp /etc/default/isc-dhcp-server /etc/default/isc-dhcp-server.original
-sed -i 's/INTERFACES=""/INTERFACES="eth1"/g' /etc/default/isc-dhcp-server
+sed -i 's/INTERFACES=""/INTERFACES="eth1"/' /etc/default/isc-dhcp-server
 #================== Copie des fichiers nécessaire pour PXE ===================
 cp -R /usr/lib/syslinux/* /usr/lib/PXELINUX/* /tftpboot
 cp /usr/lib/syslinux/modules/bios/ldlinux.c32 /tftpboot
