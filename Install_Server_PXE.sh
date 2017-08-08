@@ -84,6 +84,7 @@ do
         break 
     fi
 done 
+
 #=========================== DOSSIERS ======================================
 # Dossier logInstall
 if [ -d "/var/log/logInstall" ]
@@ -110,16 +111,22 @@ if [ ! -d "/tftpboot" ]
 then
     mkdir /tftpboot
     mkdir /tftpboot/pxelinux.cfg
+else 
+    echo "Dossier existe déja !!"
 fi
 
 if [ ! -d "/tftpboot/ISO" ]
 then
     mkdir /tftpboot/ISO
+else
+    echo "Dossier existe déja !!"
 fi
 
 if [ ! -d "/tftpboot/pxelinux.cfg" ]
 then
     mkdir /tftpboot/pxelinux.cfg
+else
+    echo "Dossier existe déja !!"
 fi
 
 # Redirection Globale erreur et resultat vers ServerPXE.log
