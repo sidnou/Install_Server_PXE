@@ -49,7 +49,7 @@ echo -e "\033[0m\n"
 #==================== Variables globale ==================================
 nombreCarteEthernet=0
 # Fichier image ISO à telecharger
-clonezillaVersion="2.5.0-25" # Vession Stable Clonezilla
+clonezillaVersion="2.5.2-17" # Vession Stable Clonezilla
 ubcdVersion="537"
 
 #=========================== DEBUT DU SCRIPT =============================
