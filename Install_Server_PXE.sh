@@ -298,8 +298,9 @@ sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
 # Configuration des Interfaces reseaux d'ecoute
 cp /etc/default/isc-dhcp-server /etc/default/isc-dhcp-server.original
 sed -i 's/INTERFACES=""/INTERFACES="eth1"/' /etc/default/isc-dhcp-server
-sed -i "/exit/i\/sbin/iptables -P FORWARD ACCEPT\n" /etc/rc.local
-sed -i "/exit/i\/sbin/iptables --table nat -A POSTROUTING -o eth0 -j MASQUERADE" /etc/rc.local
+
+sed -i '/exit 0/i\/sbin/iptables -P FORWARD ACCEPT\n' /etc/rc.local
+sed -i '/exit 0/i\/sbin/iptables --table nat -A POSTROUTING -o eth0 -j MASQUERADE' /etc/rc.local
 #================== Copie des fichiers nécessaire pour PXE ===================
 cp -R /usr/lib/syslinux/* /usr/lib/PXELINUX/* /tftpboot
 cp /usr/lib/syslinux/modules/bios/ldlinux.c32 /tftpboot
