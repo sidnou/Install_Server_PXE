@@ -282,7 +282,7 @@ log-facility local7;
 subnet $adressReseauIp netmask $masqSsreseau {
     # Plage adresse IP
     range $plageIpDebut $plageIpFin;
-    
+    option routers $ipEth1
 }
 next-server $ipEth1;
 filename "pxelinux.0";
