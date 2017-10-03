@@ -31,6 +31,7 @@ echo -e "\033[1;33m"
 echo "==================================================================="
 echo "==================================================================="
 echo " Ce script installe tous les composants nécéssaires "
+echo " à utilisé sur un server debian sans DHCP configuré en place "
 echo " Composants : "
 echo " isc-dhcp-server tftpd-hpa pxelinux syslinux "
 echo " Paramètre :"
@@ -49,8 +50,51 @@ echo -e "\033[0m\n"
 #==================== Variables globale ==================================
 nombreCarteEthernet=0
 # Fichier image ISO à telecharger
-clonezillaVersion="2.5.0-25" # Vession Stable Clonezilla
+clonezillaVersion="2.5.2-17" # Vession Stable Clonezilla
 ubcdVersion="537"
+
+jour=" ====== $(date +%a%d/%m/%y%t==============%t%T%t===========)"
+# Cartes reseau eth0 eth1 
+# Carte eth0
+ipEth0=192.168.1.23                 # IP carte reseau eth0
+netmskEth0=255.255.255.0            # Masque sous-reseau eth0
+gtwayEth0=192.168.1.1               # Passerelle par defaut eth0
+# Carte eth1
+ipEth1=192.168.2.1                  # IP carte reseau eth1
+netmskEth1=255.255.255.0            # Masque sous-reseau eth1
+
+# DHCP
+adressReseauIp=192.168.2.0          # Adresse reseaux 
+plageIpDebut=192.168.2.100          # Plage de debut adressage IP 
+plageIpFin=192.168.2.200            # Plage de fin adressage IP
+masqSsreseau=255.255.255.0          # Masque sous-reseaux de plage adressage IP 
+adresseSrvDns1="192.168.1.1"        # Adresse IP serveur DNS 1
+adresseSrvDns2="192.168.2.1"        # Adresse IP serveur DNS 2 
+domaine="teste.fr"                  # Domaine 
+tempBailDefault=86400               # Bail par defaut (en seconde)
+tempBailMax=691200                  # Bail Max (en seconde)
+
+
+#=========================== FONCTIONS ====================================
+function DownloadIso {
+    # Creation fichier Temp 
+    touch /tmp/tmpDownLoad/DownloadIso.sh
+    cd /tmp/tmpDownLoad
+    chmod +x DownloadIso.sh
+    cat <<FICHIERDOWNLOADISO>DownloadIso.sh
+    #!/bin/bash
+    wget http://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/$clonezillaVersion/clonezilla-live-$clonezillaVersion-amd64.iso >&1 && mv clonezilla-live-$clonezillaVersion-amd64.iso /tftpboot/ISO/clonezilla-live-amd64.iso
+    echo -e "ISO CLONEZILLA [\033[1;32m OK \033[0m]"
+    wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && echo $# && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
+    echo -e "ISO ULTIMATE BOOT CD [\033[1;32m OK \033[0m]"
+    wget http://rescuedisk.kaspersky-labs.com/rescuedisk/updatable/kav_rescue_10.iso && mv kav_rescue_10.iso /tftpboot/ISO/
+    echo -e "ISO KASPERSKY RESCUE [\033[1;32m OK \033[0m]"
+    wget http://www.hirensbootcd.es/download/Hirens.BootCD.15.2.zip && unzip Hirens.BootCD.15.2.zip && mv "Hiren's.BootCD.15.2.iso" /tftpboot/ISO/HirenSBootCD.iso
+    echo -e "ISO HIRENs Boot CD 15.2 [\033[1;32m OK \033[0m]"
+
+FICHIERDOWNLOADISO
+    echo " Téléchargement ISO en-cours ...."
+}
 
 #=========================== DEBUT DU SCRIPT =============================
 
@@ -125,52 +169,6 @@ fi
 
 # Redirection Globale erreur et resultat vers ServerPXE.log
 ## exec 2>/var/log/logInstall/Erreur_ServerPXE.log
-
-#=========================== Variables ===================================
-
-jour=" ====== $(date +%a%d/%m/%y%t==============%t%T%t===========)"
-# Cartes reseau eth0 eth1 
-# Carte eth0
-ipEth0=192.168.1.23                 # IP carte reseau eth0
-netmskEth0=255.255.255.0            # Masque sous-reseau eth0
-gtwayEth0=192.168.1.1               # Passerelle par defaut eth0
-# Carte eth1
-ipEth1=192.168.2.1                  # IP carte reseau eth1
-netmskEth1=255.255.255.0            # Masque sous-reseau eth1
-
-# DHCP
-adressReseauIp=192.168.2.0          # Adresse reseaux 
-plageIpDebut=192.168.2.100          # Plage de debut adressage IP 
-plageIpFin=192.168.2.200            # Plage de fin adressage IP
-masqSsreseau=255.255.255.0          # Masque sous-reseaux de plage adressage IP 
-adresseSrvDns1="192.168.1.1"        # Adresse IP serveur DNS 1
-adresseSrvDns2="192.168.2.1"        # Adresse IP serveur DNS 2 
-domaine="teste.fr"                  # Domaine 
-tempBailDefault=86400               # Bail par defaut (en seconde)
-tempBailMax=691200                  # Bail Max (en seconde)
-
-
-
-#=========================== FONCTIONS ====================================
-function DownloadIso {
-    # Creation fichier Temp 
-    touch /tmp/tmpDownLoad/DownloadIso.sh
-    cd /tmp/tmpDownLoad
-    chmod +x DownloadIso.sh
-    cat <<FICHIERDOWNLOADISO>DownloadIso.sh
-    #!/bin/bash
-    wget http://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/$clonezillaVersion/clonezilla-live-$clonezillaVersion-amd64.iso >&1 && mv clonezilla-live-$clonezillaVersion-amd64.iso /tftpboot/ISO/clonezilla-live-amd64.iso
-    echo -e "ISO CLONEZILLA [\033[1;32m OK \033[0m]"
-    wget http://ubcd.winsoftware-forum.de/ubcd$ubcdVersion.iso && echo $# && mv ubcd$ubcdVersion.iso /tftpboot/ISO/ubcd$ubcdVersion.iso
-    echo -e "ISO ULTIMATE BOOT CD [\033[1;32m OK \033[0m]"
-    wget http://rescuedisk.kaspersky-labs.com/rescuedisk/updatable/kav_rescue_10.iso && mv kav_rescue_10.iso /tftpboot/ISO/
-    echo -e "ISO KASPERSKY RESCUE [\033[1;32m OK \033[0m]"
-    wget http://www.hirensbootcd.es/download/Hirens.BootCD.15.2.zip && unzip Hirens.BootCD.15.2.zip && mv "Hiren's.BootCD.15.2.iso" /tftpboot/ISO/HirenSBootCD.iso
-    echo -e "ISO HIRENs Boot CD 15.2 [\033[1;32m OK \033[0m]"
-
-FICHIERDOWNLOADISO
-    echo " Téléchargement ISO en-cours ...."
-}
 
 #=========================== Mise à jour du système ======================
 echo -e "\033[1;32m"
@@ -286,8 +284,8 @@ subnet $adressReseauIp netmask $masqSsreseau {
     # Plage adresse IP
     range $plageIpDebut $plageIpFin;
     option routers $ipEth1;
-    
 }
+
 next-server $ipEth1;
 filename "pxelinux.0";
 
