@@ -370,8 +370,8 @@ echo "+----------------------------------------------------------------+"
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
 cd /tmp/tmpDownLoad/
-## ./DownloadIso.sh
-## echo "Téléchargement finis"
+./DownloadIso.sh
+echo "Téléchargement finis"
 rm DownloadIso.sh
 # Effacement du dossier temporaire de téléchargement ISO
 rm -R /tmp/tmpDownLoad
