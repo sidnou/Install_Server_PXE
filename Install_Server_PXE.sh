@@ -5,7 +5,7 @@
 #
 #
 #                     Install_Server_PXE.sh
-#                          Version 1.0.2
+#                          Version 1.1.1
 #                    sidney jacques sidjack972@gmail.com
 #
 #
@@ -13,7 +13,8 @@
 # Définition: Script d'installation d'un serveur DHCP et PXE 
 #
 ###########################################################################
-# VERSION:  1.0.2 25/05/17 Améloiration visuel du script et teste de la 
+# VERSION:  1.1.1 03/10/17 Activation du routage et NAT
+#           1.0.2 25/05/17 Améloiration visuel du script et teste de la 
 #                          présence des dossier et fichier 
 #            
 #           1.0.1 18/04/17 Améloiration visuel du script
