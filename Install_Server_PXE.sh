@@ -282,7 +282,7 @@ max-lease-time $tempBailMax;          # Bail max en (s)  8 jours
 log-facility local7;
 
 # Distrubition adresse IP 
-subnet $adressReseauIp netmipask $masqSsreseau {
+subnet $adressReseauIp netmask $masqSsreseau {
     # Plage adresse IP
     range $plageIpDebut $plageIpFin;
     option routers $ipEth1;
@@ -372,18 +372,8 @@ echo "+----------------------------------------------------------------+"
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
 cd /tmp/tmpDownLoad/
-<<<<<<< Updated upstream
 ./DownloadIso.sh
 echo "Téléchargement finis"
-=======
-<<<<<<< Updated upstream
-## ./DownloadIso.sh
-## echo "Téléchargement finis"
-=======
-## ./DownloadIso.sh 
-echo "Téléchargement finis"
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 rm DownloadIso.sh
 # Effacement du dossier temporaire de téléchargement ISO
 rm -R /tmp/tmpDownLoad
