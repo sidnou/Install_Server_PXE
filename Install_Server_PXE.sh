@@ -268,6 +268,7 @@ cat > /etc/dhcp/dhcpd.conf << FICHIERDHCP
 authoritative;       
 
 ddns-update-style none;
+# Option 
 
 # Addresse serveur DNS et domaine
 option domain-name-servers $adresseSrvDns1, $adresseSrvDns2; 
@@ -284,13 +285,21 @@ subnet $adressReseauIp netmask $masqSsreseau {
     range $plageIpDebut $plageIpFin;
     option routers $ipEth1;
 }
+
 next-server $ipEth1;
 filename "pxelinux.0";
 
 FICHIERDHCP
+# Activé NAT sur SERVER PXE à chaque démarrage du serveur 
+sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+
 # Configuration des Interfaces reseaux d'ecoute
 cp /etc/default/isc-dhcp-server /etc/default/isc-dhcp-server.original
-sed -i 's/INTERFACES=""/INTERFACES="eth1"/g' /etc/default/isc-dhcp-server
+sed -i 's/INTERFACES=""/INTERFACES="eth1"/' /etc/default/isc-dhcp-server
+
+# insert '/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' avant exit 0
+sed -i '$i\/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE\n' /etc/rc.local 
+/etc/init.d/rc.local restart
 #================== Copie des fichiers nécessaire pour PXE ===================
 cp -R /usr/lib/syslinux/* /usr/lib/PXELINUX/* /tftpboot
 cp /usr/lib/syslinux/modules/bios/ldlinux.c32 /tftpboot
@@ -361,8 +370,8 @@ echo "+----------------------------------------------------------------+"
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
 cd /tmp/tmpDownLoad/
-./DownloadIso.sh
-echo "Téléchargement finis"
+## ./DownloadIso.sh
+## echo "Téléchargement finis"
 rm DownloadIso.sh
 # Effacement du dossier temporaire de téléchargement ISO
 rm -R /tmp/tmpDownLoad
