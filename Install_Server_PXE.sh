@@ -271,7 +271,7 @@ authoritative;
 
 ddns-update-style none;
 # Option 
-option routers $ipEth1;
+
 # Addresse serveur DNS et domaine
 option domain-name-servers $adresseSrvDns1, $adresseSrvDns2; 
 option domain-name "$domaine";
@@ -285,7 +285,7 @@ log-facility local7;
 subnet $adressReseauIp netmask $masqSsreseau {
     # Plage adresse IP
     range $plageIpDebut $plageIpFin;
-    
+    option routers $ipEth1;
     
 }
 next-server $ipEth1;
@@ -298,9 +298,10 @@ sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
 # Configuration des Interfaces reseaux d'ecoute
 cp /etc/default/isc-dhcp-server /etc/default/isc-dhcp-server.original
 sed -i 's/INTERFACES=""/INTERFACES="eth1"/' /etc/default/isc-dhcp-server
-
-sed -i '/exit 0/i\/sbin/iptables -P FORWARD ACCEPT\n' /etc/rc.local
-sed -i '/exit 0/i\/sbin/iptables --table nat -A POSTROUTING -o eth0 -j MASQUERADE' /etc/rc.local
+# insert '/sbin/iptables -P FORWARD ACCEPT' avant exit 0
+sed -i '$i\/sbin/iptables -P FORWARD ACCEPT\n' /etc/rc.local 
+# insert '/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' avant exit 0
+sed -i '$i\/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE\n' /etc/rc.local 
 #================== Copie des fichiers nécessaire pour PXE ===================
 cp -R /usr/lib/syslinux/* /usr/lib/PXELINUX/* /tftpboot
 cp /usr/lib/syslinux/modules/bios/ldlinux.c32 /tftpboot
@@ -371,8 +372,8 @@ echo "+----------------------------------------------------------------+"
 #=========================== TELECHAGEMENT ISO ===============================
 DownloadIso
 cd /tmp/tmpDownLoad/
-./DownloadIso.sh
-echo "Téléchargement finis"
+## ./DownloadIso.sh
+## echo "Téléchargement finis"
 rm DownloadIso.sh
 # Effacement du dossier temporaire de téléchargement ISO
 rm -R /tmp/tmpDownLoad
