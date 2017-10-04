@@ -28,4 +28,5 @@ Activation Fonction ROUTEUR
 NAT 
 eth1 <----NAT---->eth0<---->INTERNET
 
+![Image de SRVPXE](https://github.com/sidnou/Install_Server_PXE/blob/master/Image/SRVPXE.png)
 
