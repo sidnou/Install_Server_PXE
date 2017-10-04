@@ -4,6 +4,8 @@ Script pour installer un SERVEUR PXE sur Debian
 Les Postes clients minimum 2Go RAM 
 Certain ISO font environ 1Go  
 
+![Image de Menu Boot PXE](https://github.com/sidnou/Install_Server_PXE/blob/master/Image/Menu_Boot_PXE.png)
+
 ISO:
 Clonezilla,
 Ultimate Boot CD,
