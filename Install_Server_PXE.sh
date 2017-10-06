@@ -295,7 +295,8 @@ filename "pxelinux.0";
 FICHIERDHCP
 # Activé NAT sur SERVER PXE à chaque démarrage du serveur 
 sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
-
+# Appliquer la modification
+/etc/init.d/procps restart
 # Configuration des Interfaces reseaux d'ecoute
 cp /etc/default/isc-dhcp-server /etc/default/isc-dhcp-server.original
 sed -i 's/INTERFACES=""/INTERFACES="eth1"/' /etc/default/isc-dhcp-server
