@@ -170,7 +170,7 @@ function DownloadIso {
     echo -e "ISO HIRENs Boot CD 15.2 [\033[1;32m OK \033[0m]"
 
 FICHIERDOWNLOADISO
-    echo " Téléchargement ISO en-cours ...."
+echo " Téléchargement ISO en-cours ...."
 }
 
 #=========================== Mise à jour du système ======================
