@@ -1,0 +1,12 @@
+{
+    "etats SERVICES": {
+        "DHCP": "NOK",
+        "TFTP": "NOK",
+        "DNS": "NOK"
+    },
+    "INFO SERVER PXE": {
+        "IP_ETH0": "192.168.1.23",
+        "NETMASK_ETH0": "255.255.255.0",
+        "IP_ETH1": "192.168.2.1"
+    }
+}
